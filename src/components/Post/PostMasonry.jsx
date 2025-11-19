@@ -2,7 +2,7 @@
     * @description      : 
     * @author           : fortu
     * @group            : 
-    * @created          : 19/11/2025 - 11:58:21
+    * @created          : 19/11/2025 - 12:06:14
     * 
     * MODIFICATION LOG
     * - Version         : 1.0.0
@@ -11,9 +11,8 @@
     * - Modification    : 
 **/
 /**
- * PostMasonry.jsx — CLEAN + SAFE + NO includes() errors
+ * PostMasonry.jsx — passes favorites + toggle handler
  */
-
 import { motion, AnimatePresence } from "framer-motion";
 import PostCard from "./PostCard";
 import "../../styles/masonry.css";
@@ -32,6 +31,8 @@ export default function PostMasonry({
   openModal,
   page,
   perPage,
+  favorites,
+  onFavoriteChange,
 }) {
   if (!posts || posts.length === 0) {
     return <p className="text-gray-500">No posts found.</p>;
@@ -47,6 +48,7 @@ export default function PostMasonry({
       >
         {posts.map((post, i) => {
           const index = i + 1 + (page - 1) * perPage;
+          const isFavorited = favorites.includes(post.id);
 
           return (
             <motion.div key={post.id} variants={itemVariants}>
@@ -54,6 +56,8 @@ export default function PostMasonry({
                 post={post}
                 index={index}
                 openModal={openModal}
+                isFavorited={isFavorited}
+                onFavoriteChange={onFavoriteChange}
               />
             </motion.div>
           );
