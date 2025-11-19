@@ -1,0 +1,16 @@
+/* masonry simple column layout */
+.masonry {
+  column-count: 3;
+  column-gap: 1.2rem;
+  padding: 0.5rem 0;
+}
+
+@media (max-width: 1000px) { .masonry { column-count: 2; } }
+@media (max-width: 600px) { .masonry { column-count: 1; } }
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+  display: inline-block;
+  width: 100%;
+}
