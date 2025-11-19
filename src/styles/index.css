@@ -105,3 +105,30 @@ input, select {
 .masonry-item {
   margin-bottom: 1.6rem !important;
 }
+
+/* appended styles for layout toggle, grid and card sizing */
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  padding: 0.6rem 0;
+}
+
+@media (max-width: 1000px) {
+  .grid-layout { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .grid-layout { grid-template-columns: 1fr; }
+}
+
+/* keep masonry rules intact but improve spacing */
+.masonry { column-count: 3; column-gap: 1.6rem; padding: 0.6rem 0; }
+@media (max-width: 1000px) { .masonry { column-count: 2; } }
+@media (max-width: 640px) { .masonry { column-count: 1; } }
+
+/* masonry item should not break */
+.masonry-item { break-inside: avoid; margin-bottom: 1.6rem; display: inline-block; width: 100%; }
+
+/* card polish */
+.card { transition: transform .18s ease, box-shadow .18s ease; border-radius: 12px; }
+.card:hover { transform: translateY(-6px); }

@@ -2,7 +2,7 @@
     * @description      : 
     * @author           : fortu
     * @group            : 
-    * @created          : 19/11/2025 - 00:57:08
+    * @created          : 19/11/2025 - 11:38:25
     * 
     * MODIFICATION LOG
     * - Version         : 1.0.0
@@ -10,34 +10,42 @@
     * - Author          : fortu
     * - Modification    : 
 **/
-// src/components/UI/Modal.jsx
+/**
+ * PostCard.jsx — Clean big cards with single View button
+ */
+import { useState } from "react";
+import { toggleFavorite, isFavorite } from "../../utils/favorites";
+
 export default function Modal({ open, onClose, post, translated, loading }) {
-  if (!open || !post) return null;
+  if (!open || !post) return null; // prevents crashes
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="relative bg-white w-[90%] max-w-xl p-6 rounded-xl shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[999]">
+      <div className="bg-white rounded-xl p-8 w-[90%] max-w-3xl shadow-xl relative">
+        
+        {/* CLOSE BUTTON */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-700 hover:text-black text-xl"
-          aria-label="Close modal"
+          className="absolute top-4 right-4 text-xl"
         >
           ✕
         </button>
 
-        <h2 className="text-xl font-semibold mb-3 text-gray-900">{post.title}</h2>
+        {/* TITLE */}
+        <h2 className="text-3xl font-bold mb-6">{post.title}</h2>
 
-        <p className="text-sm text-gray-700 mb-4"><strong>Original:</strong> {post.body}</p>
+        {/* ORIGINAL */}
+        <div className="mb-6">
+          <strong className="font-semibold">Original:</strong>
+          <p className="mt-2 text-lg leading-relaxed">
+            {post.body}
+          </p>
+        </div>
 
-        <div className="p-3 rounded bg-gray-100">
-          <strong className="text-gray-900">Translation:</strong>
-          <p className="mt-1 text-sm text-gray-800">
+        {/* TRANSLATION */}
+        <div className="bg-gray-100 p-4 rounded-lg text-lg">
+          <strong className="font-semibold">Translation:</strong>
+          <p className="mt-2">
             {loading ? "Translating..." : translated}
           </p>
         </div>

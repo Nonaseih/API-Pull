@@ -2,7 +2,7 @@
     * @description      : 
     * @author           : fortu
     * @group            : 
-    * @created          : 19/11/2025 - 01:18:15
+    * @created          : 19/11/2025 - 11:57:12
     * 
     * MODIFICATION LOG
     * - Version         : 1.0.0
@@ -11,12 +11,13 @@
     * - Modification    : 
 **/
 /**
- * Home.jsx — with global numbering support
+ * Home.jsx — Splash + Posts Page with header
  */
 import { useState } from "react";
 import { getPosts } from "../api/posts";
 import useFetch from "../hooks/useFetch";
 
+import SplashPage from "../components/UI/SplashPage";
 import PostMasonry from "../components/Post/PostMasonry";
 import SearchBar from "../components/UI/SearchBar";
 import FilterMenu from "../components/UI/FilterMenu";
@@ -30,6 +31,10 @@ import { getCached, setCached } from "../utils/translationCache";
 export default function Home() {
   const { data, loading, error } = useFetch(getPosts);
 
+  // Splash page state
+  const [showSplash, setShowSplash] = useState(true);
+
+  // Filters & sorting
   const [search, setSearch] = useState("");
   const [filterUser, setFilterUser] = useState("");
   const [sort, setSort] = useState("");
@@ -37,6 +42,7 @@ export default function Home() {
 
   const ITEMS_PER_PAGE = 12;
 
+  // Modal
   const [modalOpen, setModalOpen] = useState(false);
   const [modalPost, setModalPost] = useState(null);
   const [modalTranslated, setModalTranslated] = useState("");
@@ -45,7 +51,7 @@ export default function Home() {
   if (loading) return <p className="p-5">Loading...</p>;
   if (error) return <p className="p-5 text-red-500">Failed to load</p>;
 
-  // Search + filter
+  // FILTER
   let result = data.filter((p) => {
     const matchesSearch =
       p.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -56,17 +62,17 @@ export default function Home() {
     return matchesSearch && matchesUser;
   });
 
-  // Sort
+  // SORT
   if (sort === "title-asc") result.sort((a, b) => a.title.localeCompare(b.title));
   if (sort === "title-desc") result.sort((a, b) => b.title.localeCompare(a.title));
   if (sort === "id-asc") result.sort((a, b) => a.id - b.id);
   if (sort === "id-desc") result.sort((a, b) => b.id - a.id);
 
-  // Pagination
+  // PAGE DATA
   const totalPages = Math.ceil(result.length / ITEMS_PER_PAGE);
   const paged = result.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
-  // Open modal
+  // MODAL
   const openModal = async (post) => {
     setModalPost(post);
     setModalOpen(true);
@@ -78,35 +84,43 @@ export default function Home() {
     }
 
     setModalLoading(true);
-
     try {
       const translated = await translateToEnglish(post.body);
       setCached(post.id, translated);
       setModalTranslated(translated);
-    } catch (err) {
-      console.error("Modal translation failed:", err);
+    } catch {
       setModalTranslated("Translation failed.");
     }
-
     setModalLoading(false);
   };
 
+  // ---- SHOW SPLASH FIRST ----
+  if (showSplash) {
+    return <SplashPage onContinue={() => setShowSplash(false)} />;
+  }
+
+  // ---- MAIN PAGE ----
   return (
     <div className="p-4">
 
+      {/* POSTS TITLE */}
+      <h1 className="text-4xl font-extrabold mb-6 text-gray-900 tracking-tight">
+        POSTS
+      </h1>
+
       {/* Toolbar */}
-      <div className="sticky top-0 z-40 bg-white py-3 shadow-md mb-4 flex gap-3 flex-wrap">
+      <div className="sticky top-0 z-40 bg-white py-3 shadow-md mb-6 flex gap-4 flex-wrap">
         <SearchBar value={search} onChange={(v) => { setPage(1); setSearch(v); }} />
         <FilterMenu value={filterUser} onChange={(v) => { setPage(1); setFilterUser(v); }} />
         <SortMenu value={sort} onChange={(v) => { setPage(1); setSort(v); }} />
       </div>
 
-      {/* Masonry */}
-      <PostMasonry 
-        posts={paged} 
-        openModal={openModal}
+      {/* Posts */}
+      <PostMasonry
+        posts={paged}
         page={page}
         perPage={ITEMS_PER_PAGE}
+        openModal={openModal}
       />
 
       <Pagination current={page} totalPages={totalPages} onChange={setPage} />

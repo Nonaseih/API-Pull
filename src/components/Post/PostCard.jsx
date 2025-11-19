@@ -2,7 +2,7 @@
     * @description      : 
     * @author           : fortu
     * @group            : 
-    * @created          : 19/11/2025 - 01:18:52
+    * @created          : 19/11/2025 - 11:52:44
     * 
     * MODIFICATION LOG
     * - Version         : 1.0.0
@@ -11,53 +11,56 @@
     * - Modification    : 
 **/
 /**
- * src/components/Post/PostCard.jsx
- * Fix spacing, big numbers, no overlap, proper button
+ * PostCard.jsx — fixed layout, proper spacing, number above title
  */
 import { motion } from "framer-motion";
-import { getCached } from "../../utils/translationCache";
 
-export default function PostCard({ post, index, openModal }) {
-  const isTranslated = !!getCached(post.id);
-
+export default function PostCard({
+  post,
+  index,
+  openModal,
+  isFavorited,
+  onFavoriteChange,
+}) {
   return (
     <motion.div
-      className="card glass-card masonry-item relative p-7"
-      initial={{ opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.32, delay: index * 0.03 }}
+      whileHover={{ y: -6, boxShadow: "0 12px 25px rgba(0,0,0,0.12)" }}
+      className="card glass-card masonry-item p-6 rounded-xl shadow-md relative"
     >
+      {/* STAR BUTTON */}
+      <button
+        onClick={() => onFavoriteChange(post.id)}
+        className="absolute top-4 right-4 text-3xl transition hover:scale-110 select-none"
+      >
+        {isFavorited ? (
+          <span className="text-yellow-400">★</span>
+        ) : (
+          <span className="text-gray-300">☆</span>
+        )}
+      </button>
 
-      {/* Big number OUTSIDE the card so it doesn't touch title */}
-      <span className="absolute -top-4 -left-4 px-4 py-2 text-2xl font-extrabold bg-white border shadow-md rounded-lg">
-        #{index + 1}
-      </span>
+      {/* NUMBER */}
+      <div className="text-5xl font-extrabold text-gray-300 mb-6 select-none">
+        {index}
+      </div>
 
-      {/* Translated badge */}
-      {isTranslated && (
-        <span className="absolute top-4 right-4 px-3 py-1 text-xs font-semibold bg-green-600 text-white rounded-full shadow">
-          ✓ translated
-        </span>
-      )}
-
-      {/* Title */}
-      <h3 className="mt-4 text-xl font-semibold text-gray-900 leading-snug">
+      {/* TITLE */}
+      <h2 className="text-2xl font-bold text-gray-900 leading-tight mb-3">
         {post.title}
-      </h3>
+      </h2>
 
-      {/* Body */}
-      <p className="mt-3 text-[15px] text-gray-700 leading-relaxed">
+      {/* BODY TEXT */}
+      <p className="text-gray-700 text-base leading-relaxed mb-6">
         {post.body}
       </p>
 
-      {/* Big button with proper spacing */}
+      {/* BUTTON */}
       <button
         onClick={() => openModal(post)}
-        className="mt-6 px-6 py-3 rounded-lg bg-black text-white text-sm font-medium shadow-md hover:scale-[1.02] transition whitespace-nowrap"
+        className="mt-2 px-6 py-3 w-full bg-black text-white rounded-lg text-lg font-semibold hover:bg-gray-800 transition"
       >
-        Translate
+        View
       </button>
-
     </motion.div>
   );
 }
