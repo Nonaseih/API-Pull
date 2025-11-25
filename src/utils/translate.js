@@ -2,27 +2,27 @@
     * @description      : 
     * @author           : fortu
     * @group            : 
-    * @created          : 19/11/2025 - 00:28:29
+    * @created          : 20/11/2025 - 16:41:07
     * 
     * MODIFICATION LOG
     * - Version         : 1.0.0
-    * - Date            : 19/11/2025
+    * - Date            : 20/11/2025
     * - Author          : fortu
     * - Modification    : 
 **/
 export async function translateToEnglish(text) {
-  try {
-    const res = await fetch("http://localhost:3001/translate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text })
-    });
+  const url = "https://translate.googleapis.com/translate_a/single";
 
-    const data = await res.json();
+  const params = new URLSearchParams({
+    client: "gtx",
+    sl: "auto",
+    tl: "en",
+    dt: "t",
+    q: text,
+  });
 
-    return data.translated || "Translation failed.";
-  } catch (err) {
-    console.error("Translation error:", err);
-    return "Translation failed.";
-  }
+  const res = await fetch(`${url}?${params.toString()}`);
+  const data = await res.json();
+
+  return data[0].map((x) => x[0]).join("") || "Translation failed.";
 }

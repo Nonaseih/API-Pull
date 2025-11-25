@@ -16,7 +16,7 @@ export default function DetailModal({ open, onClose, post }) {
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]"
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-9999"
       onClick={onClose}
     >
       <div

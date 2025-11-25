@@ -2,31 +2,28 @@
     * @description      : 
     * @author           : fortu
     * @group            : 
-    * @created          : 18/11/2025 - 23:51:45
+    * @created          : 20/11/2025 - 14:11:40
     * 
     * MODIFICATION LOG
     * - Version         : 1.0.0
-    * - Date            : 18/11/2025
+    * - Date            : 20/11/2025
     * - Author          : fortu
     * - Modification    : 
 **/
-// src/hooks/useFetch.js
 import { useEffect, useState } from "react";
 
-export default function useFetch(fetcher) {
+export default function useFetch(fn, deps = []) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    let mounted = true;
     setLoading(true);
-    fetcher()
-      .then((d) => mounted && setData(d))
-      .catch((e) => mounted && setError(e))
-      .finally(() => mounted && setLoading(false));
-    return () => (mounted = false);
-  }, [fetcher]);
+    fn()
+      .then(setData)
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }, deps);
 
   return { data, loading, error };
 }

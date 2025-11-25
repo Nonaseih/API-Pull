@@ -1,134 +1,203 @@
 @import "tailwindcss";
 
-/* src/styles/globals.css
-   Clean light-only theme, glass cards, transitions */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --bg: #f3f4f6;
+/* ========== Brand tokens ========== */
+:root{
+  --bg: #f5f6fa;
   --card: #ffffff;
   --muted: #6b7280;
   --text: #111827;
-  --glass-alpha: 0.62;
+  --accent: #7c3aed; /* purple */
+  --accent-600: #6d28d9;
+  --danger: #ef4444;
+  --glass-alpha: 0.56;
 }
 
-html, body, #root {
-  height: 100%;
-}
-
-body {
+/* ========== Base ========== */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body,#root{height:100%}
+body{
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: var(--bg);
-  color: var(--text);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.45;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.45;
+  padding: 0 12px 48px;
 }
 
-/* card + glass */
+/* ========== Layout helpers ========== */
+.container { max-width:1200px; margin:0 auto; }
+.toolbar { display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; padding:12px 0; }
+
+/* ========== Card base (glass) ========== */
 .card {
-  background: var(--card);
-  border-radius: 12px;
-  padding: 1rem;
-  border: 1px solid rgba(15, 23, 42, 0.06);
-  box-shadow: 0 8px 20px rgba(15,23,42,0.06);
-  transition: transform .18s ease, box-shadow .18s ease;
+  background:var(--card);
+  border-radius:14px;
+  border:1px solid rgba(16,24,40,0.04);
+  box-shadow:0 10px 30px rgba(15,23,42,0.06);
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+  overflow:hidden;
 }
 
-.glass-card {
+.glass {
   background: rgba(255,255,255,var(--glass-alpha));
-  backdrop-filter: blur(10px) saturate(120%);
-  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  backdrop-filter: blur(12px) saturate(150%);
 }
 
-/* toolbar */
-.sticky-toolbar {
-  background: rgba(255,255,255,0.92);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid rgba(0,0,0,0.04);
-  padding: 0.6rem;
-}
-
-/* input & selects */
-input, select {
-  border: 1px solid rgba(0,0,0,0.08);
-  padding: .5rem .6rem;
-  border-radius: 8px;
-  background: white;
-  color: var(--text);
-}
-
-/* translate button */
-.translate-btn {
-  transition: transform .12s ease, box-shadow .12s ease;
-}
-.translate-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
-}
-
-/* fade */
-.fade-enter { opacity: 0; transform: translateY(6px); }
-.fade-enter-active { opacity: 1; transform: translateY(0); transition: all .28s ease; }
-
-/* masonry */
-.masonry { column-count: 3; column-gap: 1.2rem; padding: 0.5rem 0; }
-@media (max-width: 1000px) { .masonry { column-count: 2; } }
-@media (max-width: 640px) { .masonry { column-count: 1; } }
-
-.masonry-item { break-inside: avoid; margin-bottom: 1rem; display: inline-block; width: 100%; }
-
-/* utility small */
-.small-badge {
-  font-size: 11px;
-  padding: .25rem .5rem;
-  border-radius: 999px;
-  display: inline-block;
-  background: #ecfdf5;
-  color: #065f46;
-  font-weight: 600;
-}
-
-/* Bigger card scaling */
-.card {
-  padding: 1.5rem !important;
-  border-radius: 14px;
-}
-
-/* Larger badges */
-.card span {
-  font-family: Inter, sans-serif;
-}
-
-/* Increase masonry spacing */
-.masonry-item {
-  margin-bottom: 1.6rem !important;
-}
-
-/* appended styles for layout toggle, grid and card sizing */
-.grid-layout {
+/* ========== Square Grid ========== */
+.square-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1.2rem;
-  padding: 0.6rem 0;
+  margin-top: 12px;
 }
 
-@media (max-width: 1000px) {
-  .grid-layout { grid-template-columns: repeat(2, 1fr); }
+/* square card specifics */
+.square-card {
+  aspect-ratio: 1/1;              /* keep card square-ish */
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding: 18px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.62);
+  border:1px solid rgba(16,24,40,0.04);
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
 }
-@media (max-width: 640px) {
-  .grid-layout { grid-template-columns: 1fr; }
+.square-card:hover { transform: translateY(-6px); box-shadow: 0 14px 36px rgba(15,23,42,0.08); background: rgba(255,255,255,0.75) }
+
+/* header row */
+.card-top { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+
+/* number badge */
+.card-number {
+  font-weight:800;
+  font-size:28px;
+  color: rgba(15,23,42,0.18);
+  -webkit-user-select:none;
+  user-select:none;
 }
 
-/* keep masonry rules intact but improve spacing */
-.masonry { column-count: 3; column-gap: 1.6rem; padding: 0.6rem 0; }
-@media (max-width: 1000px) { .masonry { column-count: 2; } }
-@media (max-width: 640px) { .masonry { column-count: 1; } }
+/* star button */
+.icon-btn {
+  width:34px; height:34px; border-radius:10px;
+  display:inline-flex; align-items:center; justify-content:center;
+  background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); cursor:pointer;
+  transition: transform .12s ease, background .12s ease;
+}
+.icon-btn:hover { transform: scale(1.05); background: rgba(0,0,0,0.06) }
 
-/* masonry item should not break */
-.masonry-item { break-inside: avoid; margin-bottom: 1.6rem; display: inline-block; width: 100%; }
+/* body text */
+.card-body { margin-top:10px; flex:1 1 auto; color:var(--muted); font-size:0.95rem; line-height:1.35; overflow:hidden; }
 
-/* card polish */
-.card { transition: transform .18s ease, box-shadow .18s ease; border-radius: 12px; }
-.card:hover { transform: translateY(-6px); }
+/* footer row */
+.card-footer { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:12px; }
+.small-meta { font-size:0.85rem; color:rgba(15,23,42,0.45) }
+
+/* action badge (view) */
+.view-btn {
+  background: linear-gradient(180deg,var(--accent),var(--accent-600));
+  color:#fff; padding:8px 10px; border-radius:10px; font-weight:600; border:none; cursor:pointer;
+  box-shadow: 0 6px 18px rgba(124,58,237,0.18);
+}
+.view-btn:active { transform: scale(.99) }
+
+/* delete button style */
+.delete-btn {
+  width:34px; height:34px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center;
+  background: rgba(255,245,247,0.9); color:var(--danger); border:1px solid rgba(255,230,232,0.9); cursor:pointer;
+}
+
+/* favorites-only pill + back button */
+.top-controls { display:flex; gap:10px; align-items:center; margin-bottom:6px; }
+.btn-pill { background:transparent; border:1px solid rgba(0,0,0,0.06); padding:8px 12px; border-radius:999px; cursor:pointer; }
+.btn-primary { background:var(--accent); color:#fff; border:none; padding:8px 12px; border-radius:999px; cursor:pointer; }
+
+/* responsive tweaks */
+@media (max-width:900px){
+  .square-grid { grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); }
+}
+@media (max-width:520px){
+  .square-grid { grid-template-columns: 1fr; }
+  .card-number { font-size:22px }
+  .view-btn { padding:6px 8px }
+}
+
+/* small helpers to avoid conflicting old rules */
+.masonry, .masonry-item { display:block !important; column-count: auto !important; }
+
+/* ===============================
+   FINAL FIX — CAT CARD GRID
+=============================== */
+
+/* Force grid instead of masonry */
+.masonry {
+  all: unset !important; /* nuke old masonry rules */
+}
+
+/* Square-ish responsive grid */
+.square-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-auto-rows: 280px;   /* controls card height */
+  gap: 1.4rem;
+  padding: 1rem 0;
+}
+
+/* Card styling */
+.square-card {
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 16px;
+  padding: 1.2rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.square-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+}
+
+/* Card header */
+.square-card-number {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #d1d5db;
+}
+
+/* Buttons */
+.square-card-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.04);
+  transition: background .15s ease, transform .15s ease;
+}
+
+.square-card-btn:hover {
+  background: rgba(0,0,0,0.08);
+  transform: scale(1.05);
+}
+
+/* Footer */
+.square-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .8rem;
+  color: #6b7280;
+}
