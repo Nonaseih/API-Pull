@@ -2,7 +2,7 @@
     * @description      : 
     * @author           : fortu
     * @group            : 
-    * @created          : 25/11/2025 - 03:57:33
+    * @created          : 25/11/2025 - 13:00:22
     * 
     * MODIFICATION LOG
     * - Version         : 1.0.0
@@ -11,60 +11,56 @@
     * - Modification    : 
 **/
 // src/components/Cats/CatModal.jsx
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
 
-export default function CatModal({ open, fact, index, onClose }) {
-  const [imgUrl, setImgUrl] = useState("");
-
-  useEffect(() => {
-    if (!open) return;
-    // get random cat image via placekitten or thecatapi (no key required for simple endpoints)
-    async function fetchImg() {
-      try {
-        // TheCatAPI requires an API key for some features; using placekitten as fallback
-        const r = await axios.get(`https://placekitten.com/800/600`, { responseType: "blob" });
-        const url = URL.createObjectURL(r.data);
-        setImgUrl(url);
-      } catch (e) {
-        setImgUrl(""); // okay to show no image
-      }
-    }
-    fetchImg();
-    return () => { setImgUrl(""); };
-  }, [open]);
-
+export default function CatModal({ open, fact, onClose }) {
   if (!open || !fact) return null;
 
+  const randomImage = `https://cataas.com/cat?time=${Date.now()}`;
+
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ background: "rgba(7,10,12,0.45)", padding: 20 }}
-      onClick={onClose}
-    >
-      <div
-        className="card"
-        onClick={(e) => e.stopPropagation()}
-        style={{ width: "min(920px, 96%)", maxHeight: "86vh", overflowY: "auto", padding: 22, borderRadius: 14 }}
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 800 }}>{`Fact ${index}`}</h2>
-          <button onClick={onClose} className="icon-btn" aria-label="Close">✕</button>
-        </div>
+        <motion.div
+          className="bg-white rounded-2xl max-w-lg w-full p-6 glass-card shadow-xl relative"
+          initial={{ scale: 0.85, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.85, opacity: 0 }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl"
+          >
+            ✕
+          </button>
 
-        {imgUrl ? (
-          <img src={imgUrl} alt="random cat" style={{ width: "100%", height: 300, objectFit: "cover", borderRadius: 8, marginTop: 12 }} />
-        ) : null}
+          {/* Image */}
+          <img
+            src={randomImage}
+            alt="Random cat"
+            className="w-full rounded-xl h-56 object-cover mb-5"
+          />
 
-        <p style={{ marginTop: 14, color: "var(--muted)", fontSize: 16, lineHeight: 1.5 }}>
-          {fact.fact}
-        </p>
+          {/* Text */}
+          <h2 className="text-xl font-bold text-gray-900 mb-3">Cat Fact</h2>
 
-        <div style={{ marginTop: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ color: "rgba(0,0,0,0.45)" }}>{fact.length} chars</div>
-          <div style={{ color: "rgba(0,0,0,0.45)" }}>Source: catfact.ninja</div>
-        </div>
-      </div>
-    </div>
+          <p className="text-gray-700 leading-relaxed text-lg mb-4">
+            {fact.fact}
+          </p>
+
+          <div className="text-xs text-gray-500">
+            {fact.length} characters
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }

@@ -2,7 +2,7 @@
     * @description      : 
     * @author           : fortu
     * @group            : 
-    * @created          : 25/11/2025 - 03:57:12
+    * @created          : 25/11/2025 - 08:26:19
     * 
     * MODIFICATION LOG
     * - Version         : 1.0.0
@@ -10,51 +10,70 @@
     * - Author          : fortu
     * - Modification    : 
 **/
-// src/components/Cats/CatCard.jsx
-import React from "react";
-
-export default function CatCard({ factObj, index, isFavorite, onToggleFavorite, onDelete, onView }) {
-  const length = factObj?.length ?? (factObj?.fact ? factObj.fact.length : 0);
+/**
+ * CatCard.jsx — fixed for correct factObj usage
+ */
+export default function CatCard({
+  factObj,
+  index,
+  isFavorite,
+  onToggleFavorite,
+  onDelete,
+  onView
+}) {
   return (
-    <article className="square-card card glass">
-      <div className="card-top">
-        <div className="card-number">{index}</div>
+    <div className="square-card">
 
-        <div style={{display:"flex", gap:8, alignItems:"center"}}>
-          <button
-            className="icon-btn"
-            aria-pressed={!!isFavorite}
-            title={isFavorite ? "Unfavorite" : "Favorite"}
-            onClick={(e) => { e.stopPropagation(); onToggleFavorite && onToggleFavorite(index); }}
-          >
-            <span style={{ color: isFavorite ? "#F6C84C" : "rgba(15,23,42,0.25)", fontSize:18 }}>
-              {isFavorite ? "★" : "☆"}
-            </span>
-          </button>
+      {/* Top Row */}
+      <div className="flex justify-between items-start">
+
+        {/* NUMBER */}
+        <div className="text-3xl font-black text-gray-300 select-none">
+          {index}
         </div>
+
+        {/* STAR */}
+        <button className="square-card-btn" onClick={onToggleFavorite}>
+          {isFavorite ? (
+            <span className="text-yellow-400 text-xl">★</span>
+          ) : (
+            <span className="text-gray-400 text-xl">☆</span>
+          )}
+        </button>
       </div>
 
-      <div className="card-body" onClick={() => onView && onView(factObj, index)}>
-        <p>{factObj?.fact}</p>
-      </div>
+      {/* FACT TEXT */}
+      <p className="mt-4 flex-1 text-gray-700 leading-snug">
+        {factObj?.fact}
+      </p>
 
-      <div className="card-footer">
-        <div className="small-meta">{length} chars</div>
+      {/* FOOTER */}
+      <div className="square-card-footer mt-4">
 
-        <div style={{display:"flex", gap:8, alignItems:"center"}}>
-          <button className="view-btn" onClick={(e) => { e.stopPropagation(); onView && onView(factObj, index); }}>
+        {/* LENGTH */}
+        <span className="text-xs text-gray-500">
+          {factObj?.length} chars
+        </span>
+
+        {/* BUTTONS */}
+        <div className="flex items-center gap-2">
+          {/* VIEW */}
+          <button
+            className="px-3 py-1 bg-purple-600 text-white rounded-md"
+            onClick={onView}
+          >
             View
           </button>
 
+          {/* DELETE */}
           <button
-            className="delete-btn"
-            title="Remove this fact (temporary)"
-            onClick={(e) => { e.stopPropagation(); onDelete && onDelete(index); }}
+            className="square-card-btn text-red-500"
+            onClick={onDelete}
           >
             ✕
           </button>
         </div>
       </div>
-    </article>
+    </div>
   );
 }

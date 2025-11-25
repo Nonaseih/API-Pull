@@ -2,28 +2,81 @@
     * @description      : 
     * @author           : fortu
     * @group            : 
-    * @created          : 20/11/2025 - 14:12:37
+    * @created          : 25/11/2025 - 10:31:41
     * 
     * MODIFICATION LOG
     * - Version         : 1.0.0
-    * - Date            : 20/11/2025
+    * - Date            : 25/11/2025
     * - Author          : fortu
     * - Modification    : 
 **/
-export default function PostCard({ post, index, onView }) {
+/**
+ * src/components/Post/PostCard.jsx
+ * Professional card. Number at top-left, star top-right, view and delete
+ */
+import { motion } from "framer-motion";
+
+export default function PostCard({
+  post = {},
+  index = 0,
+  isFavorited = false,
+  onToggleFavorite = () => {},
+  onDelete = () => {},
+  onView = () => {},
+}) {
+  const title = post.title || "Untitled";
+  const body = post.body || "";
+
   return (
-    <article className="card masonry-item p-6 rounded-xl shadow">
-      <div className="text-4xl font-bold text-gray-300 mb-4">{index}</div>
+    <motion.article
+      layout
+      whileHover={{ y: -6, boxShadow: "0 16px 36px rgba(15,23,42,0.12)" }}
+      className="card glass-card post-card"
+      aria-labelledby={`post-${post.id ?? index}-title`}
+      role="article"
+    >
+      <div className="post-card-top">
+        <div className="post-number">{index}</div>
 
-      <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
-      <p className="text-gray-600 mb-4">{post.body}</p>
+        <button
+          aria-pressed={isFavorited}
+          onClick={(e) => { e.stopPropagation(); onToggleFavorite(); }}
+          title={isFavorited ? "Unfavorite" : "Favorite"}
+          className="post-action-btn star"
+        >
+          <span className={isFavorited ? "fav" : "not-fav"}>{isFavorited ? "★" : "☆"}</span>
+        </button>
+      </div>
 
-      <button
-        onClick={() => onView(post)}
-        className="w-full bg-black text-white py-2 rounded-md font-semibold hover:opacity-90"
-      >
-        View
-      </button>
-    </article>
+      <div className="post-main">
+        <h3 id={`post-${post.id ?? index}-title`} className="post-title">{title}</h3>
+        <p className="post-body line-clamp-6">{body}</p>
+      </div>
+
+      <div className="post-footer">
+        <div className="meta">
+          <span className="meta-user">User {post.userId ?? "—"}</span>
+          <span className="meta-length">{Math.max(body.length, 0)} chars</span>
+        </div>
+
+        <div className="actions">
+          <button
+            onClick={(e) => { e.stopPropagation(); onView(); }}
+            className="btn view-btn"
+            title="View"
+          >
+            View
+          </button>
+
+          <button
+            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+            className="btn delete-btn"
+            title="Remove (temporary)"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    </motion.article>
   );
 }

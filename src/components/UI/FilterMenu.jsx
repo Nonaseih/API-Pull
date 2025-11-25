@@ -2,27 +2,39 @@
     * @description      : 
     * @author           : fortu
     * @group            : 
-    * @created          : 19/11/2025 - 00:58:11
+    * @created          : 25/11/2025 - 10:42:51
     * 
     * MODIFICATION LOG
     * - Version         : 1.0.0
-    * - Date            : 19/11/2025
+    * - Date            : 25/11/2025
     * - Author          : fortu
     * - Modification    : 
 **/
-// src/components/UI/FilterMenu.jsx
-export default function FilterMenu({ value, onChange }) {
+/**
+ * FilterMenu.jsx — fully safe version
+ */
+export default function FilterMenu({ posts = [], value = "", onChange = () => {} }) {
+  const safePosts = Array.isArray(posts) ? posts : (posts?.posts ?? []);
+
+  const users = Array.from(
+    new Set(
+      safePosts
+        .map((p) => p?.userId)
+        .filter((id) => id !== null && id !== undefined)
+    )
+  ).sort((a, b) => a - b);
+
   return (
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="p-2 rounded-md border bg-white text-sm"
-      aria-label="Filter by user"
+      className="select-filter"
     >
       <option value="">All Users</option>
-      {[...Array(10)].map((_, i) => (
-        <option key={i} value={i + 1}>
-          User {i + 1}
+
+      {users.map((u) => (
+        <option key={u} value={u}>
+          User {u}
         </option>
       ))}
     </select>
